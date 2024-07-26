@@ -11,7 +11,7 @@ This is a note-taking application built with React, Node.js, and TypeScript.
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/PraveenGandikota/Notepad-Application.git
+   git clone https://github.com/PraveenGandikota/notepadapplication.git
 
 2. Navigate to the project directory:
     cd your-repository
