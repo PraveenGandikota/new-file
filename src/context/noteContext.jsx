@@ -1,52 +1,47 @@
 import { createContext, useEffect, useState } from "react";
-import { notes as noteData } from "../data/notesData";
 export const noteContext = createContext(null);
-
-export default function ContextProvider (props){
-    const [notes, setNotes] = useState(null);
+export default function ContextProvider(props) {
+    const [notes, setNotes] = useState([]);
 
     useEffect(() => {
         const fetchedData = fetchFromLocal();
-        setNotes(fetchedData);
-    }, [])
+        setNotes(fetchedData || []);
+    }, []);
 
     useEffect(() => {
-        if (notes){
+        if (notes.length) {
             saveToLocal();
         }
-    }, [notes])
+    }, [notes]);
 
     const addNote = (newNote) => {
-        setNotes((prev) => {
-            if (prev){
-               return [newNote, ...prev]
-            }
-            return [newNote]
-        })
-        
-    }
+        setNotes((prev) => [newNote, ...prev]);
+    };
 
     const deleteNote = (index) => {
-        setNotes(prev =>{
-            const temp = [...prev]
-            temp.splice(index, 1)
+        setNotes((prev) => prev.filter((_, i) => i !== index));
+    };
 
-            return temp;
-        })
-    }
+    const updateNote = (index, updatedText) => {
+        setNotes((prev) =>
+            prev.map((note, i) =>
+                i === index ? { ...note, text: updatedText } : note
+            )
+        );
+    };
 
     const saveToLocal = () => {
         localStorage.setItem("notes", JSON.stringify(notes));
-    }
+    };
 
     const fetchFromLocal = () => {
         return JSON.parse(localStorage.getItem("notes"));
-    }
+    };
 
-    const val = {notes, addNote, deleteNote};
+    const val = { notes, addNote, deleteNote, updateNote };
     return (
         <noteContext.Provider value={val}>
             {props.children}
         </noteContext.Provider>
-    )
-}
+    );
+} 
